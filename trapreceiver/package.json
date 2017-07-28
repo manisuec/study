@@ -1,0 +1,11 @@
+{
+  "name": "trapreceiver",
+  "version": "1.0.0",
+  "description": "A SNMP trap receiver",
+  "main": "trapreceiver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "manisuec",
+  "license": "ISC"
+}
