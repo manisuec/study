@@ -6,6 +6,7 @@ This short guide is to configure VS Code for a consistent and reusable developme
 
 ## ESLint Setup
 
+ESLint is a pluggable linting utility for JavaScript.
 Install ESLint either locally or globally by running 
 
 a) **npm install eslint --save-dev** in the workspace folder for a local install or 
@@ -23,7 +24,7 @@ Install ESLint VS Code extension using command **ext install vscode-eslint**
 For more information and configuration settings refer [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
 ## Flow Setup
-
+Flow is a static type checker for JavaScript code.
 Flow should be setup per project for best performance. Install flow-bin using npm
 
 **npm install flow-bin --save-dev**
@@ -59,7 +60,7 @@ After this run:
 
 **npm run flow stop**
 
-
+```
 > https-certificate-tutorial@1.0.0 flow /home/manisuec/personal/r&d/study/https
 > ./node_modules/flow-bin/flow-linux64-v0.54.1/flow "stop"
 
@@ -67,4 +68,5 @@ Trying to connect to server for /home/manisuec/personal/r&d/study/https
 Attempting to nicely kill server for /home/manisuec/personal/r&d/study/https
 Successfully killed server for /home/manisuec/personal/r&d/study/https
 ```
+
 This sets up VS Code with ESLint and Flow for development with a consistent configuation.
