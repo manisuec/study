@@ -3,8 +3,6 @@ const path = require('path');
 const split = require('split');
 const { Transform, pipeline } = require('stream');
 
-let lineCount = 0;
-
 const filterData = (fn, options = {}) =>
   new Transform({
     objectMode: true,
@@ -31,7 +29,6 @@ const transformData = (fn, options = {}) =>
     ...options,
 
     transform(chunk, encoding, callback) {
-      // console.log(chunk);
       let take;
       try {
         take = fn(JSON.parse(chunk));
