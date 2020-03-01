@@ -1,73 +1,77 @@
 const fs = require('fs');
 const path = require('path');
-const { Transform } = require('stream');
+const split = require('split');
+const { Transform, pipeline } = require('stream');
 
-const lineSplitter = new Transform({
-  readableObjectMode: true,
+let lineCount = 0;
 
-  transform(chunk, encoding, callback) {
-    console.log(chunk);
-    this.push(
-      chunk
-        .toString()
-        .trim()
-        .split('\n'),
-    );
-    callback();
-  },
-});
+const filterData = (fn, options = {}) =>
+  new Transform({
+    objectMode: true,
+    ...options,
 
-const commaSplitter = new Transform({
-  readableObjectMode: true,
+    transform(chunk, encoding, callback) {
+      let take;
+      let obj;
+      try {
+        obj = JSON.parse(chunk.toString());
+      } catch (e) {}
+      try {
+        take = fn(obj);
+      } catch (e) {
+        return callback(e);
+      }
+      return callback(null, take ? chunk : undefined);
+    },
+  });
 
-  transform(chunk, encoding, callback) {
-    this.push(
-      chunk
-        .toString()
-        .trim()
-        .split(','),
-    );
-    callback();
-  },
-});
+const transformData = (fn, options = {}) =>
+  new Transform({
+    objectMode: true,
+    ...options,
 
-const arrayToObject = new Transform({
-  readableObjectMode: true,
-  writableObjectMode: true,
+    transform(chunk, encoding, callback) {
+      // console.log(chunk);
+      let take;
+      try {
+        take = fn(JSON.parse(chunk));
+      } catch (e) {
+        return callback(e);
+      }
+      return callback(null, `${take}\n`);
+    },
+  });
 
-  transform(chunk, encoding, callback) {
-    console.log(chunk.length);
-    this.push(chunk);
-    callback();
-  },
-});
-
-const FILE_PATH = '../resources/loan_final313.csv';
-
-const processLine = chunkData => {
-  let lines = chunkData.split('\n');
-
-  for (let line of lines) {
-    console.log(line);
+const filterCondition = elem => {
+  if (elem) {
+    return elem.home_ownership === 'RENT';
   }
 
-  return lines[lines.length - 1];
+  return false;
 };
 
-const readStream = fs.createReadStream(path.resolve(FILE_PATH), {
-  encoding: 'utf8',
-});
+const riskProfile = elem => {
+  elem.risk_profile = elem.loan_amount > 5000 ? 'high' : 'low';
+  return JSON.stringify(elem);
+};
 
-// let last = '';
-// readStream.on('data', chunk => {
-//   last = processLine(last + chunk);
-// });
+const READ_FILE_PATH = '../resources/loan-data.json';
+const WRITE_FILE_PATH = '../resources/risk-profile.json';
 
-// readStream.on('end', () => {
-//   console.log('There will be no more data.');
-// });
+const readStream = fs.createReadStream(path.resolve(READ_FILE_PATH));
+const writeStream = fs.createWriteStream(path.resolve(WRITE_FILE_PATH));
 
-readStream
-  .pipe(lineSplitter)
-  .pipe(commaSplitter)
-  .pipe(arrayToObject);
+pipeline(
+  readStream,
+  split(),
+  filterData(filterCondition),
+  transformData(riskProfile),
+  writeStream,
+  err => {
+    if (err) {
+      console.error('Pipeline failed.', err);
+    } else {
+      console.log('Pipeline succeeded.');
+    }
+  },
+);
