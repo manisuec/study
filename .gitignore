@@ -1,4 +1,4 @@
 .DS_Store
 utilities/node_modules
-resources/
+resources
 node_modules
