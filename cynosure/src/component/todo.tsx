@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 type Todo = Readonly<{
-  id: number,
-  text: string,
-  done: boolean,
+  id: number;
+  text: string;
+  done: boolean;
 }>;
 
 type CompletedTodo = Todo & {
-  readonly done: true
-}
+  readonly done: true;
+};
 
 function toggleTodo(todo: Todo): Todo {
-  alert('toggle called')
+  alert('toggle called');
   return {
     id: todo.id,
     text: todo.text,
@@ -19,58 +19,72 @@ function toggleTodo(todo: Todo): Todo {
   };
 }
 
-function completeAll(todos: readonly Todo[]): Todo[] {
+function toggleAll(todos: readonly Todo[]): Todo[] {
   let arr = [];
 
   for (const todo of todos) {
-    const newTodo = Object.assign({}, todo, { done: true });
+    const newTodo = Object.assign({}, todo, { done: !todo.done });
     arr.push(newTodo);
   }
 
   return arr;
 }
 
-function completeAllWithCompletedTodo(todos: readonly Todo[]): CompletedTodo[] {
-  // let arr = [];
-
-  // for (const todo of todos) {
-  //   const newTodo = Object.assign({}, todo, { done: true });
-  //   arr.push(newTodo);
-  // }
-
-  // return arr;
-
-  return todos.map(todo => ({
+function completeAll(todos: readonly Todo[]): CompletedTodo[] {
+  return todos.map((todo) => ({
     ...todo,
-    done: true
-  }))
+    done: true,
+  }));
 }
 
+const TodoList = ({ todos: items }: { todos: Todo[] }) => {
+  const [todoList, setTodoList] = useState<Todo[]>(items);
 
-const TodoList = ({
-  todos: items
-}: {
-  todos: Todo[]
-}) => {
+  useEffect(() => {
+    setTimeout(() => {
+      alert('delay');
+    }, 100);
+  }, []);
 
   const handleClick = (elem: Todo) => (e: any) => {
     e.preventDefault();
     toggleTodo(elem);
-  }
+  };
+
+  const handleToggleAllClick = (elem: Todo[]) => (e: any) => {
+    e.preventDefault();
+    const list = toggleAll(elem);
+    setTodoList(list);
+  };
+
+  const handleCompleteAllClick = (elem: Todo[]) => (e: any) => {
+    e.preventDefault();
+    const list = completeAll(elem);
+    setTodoList(list);
+  };
 
   return (
     <>
-      {items.map((item, index) => (
-        <div
-          key={item.id}
-        >
+      {todoList.map((item) => (
+        <div key={item.id}>
           <span>{item.text}</span>
-          <span>{item.done}</span>
-          <span onClick={handleClick(item)} style={{margin: '1rem'}}>{'toggle'}</span>
+          <span style={{ margin: '1rem' }}>{`${item.done}`}</span>
+          <span onClick={handleClick(item)} style={{ margin: '1rem' }}>
+            {'toggle'}
+          </span>
         </div>
       ))}
+      <span
+        onClick={handleCompleteAllClick(todoList)}
+        style={{ margin: '1rem' }}
+      >
+        {'completeAll'}
+      </span>
+      <span onClick={handleToggleAllClick(todoList)} style={{ margin: '1rem' }}>
+        {'toggleAll'}
+      </span>
     </>
-  )
-}
+  );
+};
 
-export default TodoList
+export default TodoList;

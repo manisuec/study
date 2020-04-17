@@ -92,7 +92,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 ```
 
-Set `"allowSyntheticDefaultImports": true` in tsconfig
+Set `"allowSyntheticDefaultImports": true` in tsconfig.
+
+All [tsconfig options](https://www.typescriptlang.org/v2/en/tsconfig)
 
 ### React Hooks in TypeScript
 
