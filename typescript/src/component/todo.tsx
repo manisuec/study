@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 
 type Todo = Readonly<{
   id: number;
-  text: string;
+  text: string | null;
   done: boolean;
 }>;
 
 type CompletedTodo = Todo & {
-  readonly done: true;
+  done: true;
 };
 
 function toggleTodo(todo: Todo): Todo {
   alert('toggle called');
+  // todo.done = !todo.done;
+  // return todo;
   return {
     id: todo.id,
     text: todo.text,
@@ -69,7 +71,10 @@ const TodoList = ({ todos: items }: { todos: Todo[] }) => {
         <div key={item.id}>
           <span>{item.text}</span>
           <span style={{ margin: '1rem' }}>{`${item.done}`}</span>
-          <span onClick={handleClick(item)} style={{ margin: '1rem' }}>
+          <span
+            onClick={handleClick(Object.assign({ some: '' }, item))}
+            style={{ margin: '1rem' }}
+          >
             {'toggle'}
           </span>
         </div>

@@ -135,6 +135,10 @@ A simpler alternative to enum is just declaring a bunch of strings with union:
 
 This is handy because TypeScript will throw errors when you mistype a string for your props.
 
+### Tutorial
+
+[Link](https://github.com/manisuec/study/tree/master/typescript)
+
 ### ProgressBar
 
 ProgressBar using recharts.js 

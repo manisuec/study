@@ -11,6 +11,10 @@
   "dependencies": {
     "date-fns": "^2.8.1",
     "exceljs": "^3.5.0",
-    "exceljs-transform-stream": "^1.2.0"
+    "exceljs-transform-stream": "^1.2.0",
+    "mongodb": "^3.5.7"
+  },
+  "devDependencies": {
+    "@smartdec/smartcheck": "^2.0.1"
   }
 }
