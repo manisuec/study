@@ -35,8 +35,9 @@ async function processLineByLine() {
           const origToks = fileToks.slice(0, fileToks.length -1);
           let actualFileName = origToks.join('_');
           // console.log(actualFileName);
+          // console.log(Number(toks[0]) + 10000)
           const obj = {
-            _id: toks[0],
+            _id: Number(toks[0]) + 10000,
             name: actualFileName,
             label: toks[2]
           };
@@ -129,7 +130,7 @@ const run = async () => {
     const db = dbClient.db('supriya');
     const collection = db.collection('solidity');
     const fileArr = getAllFiles(
-      path.resolve('/Users/manisuec/Downloads/Dataset/'),
+      path.resolve('/Users/manisuec/Downloads/remove_byID/'),
     );
 
     console.log(fileArr.length);
@@ -143,12 +144,13 @@ const run = async () => {
         
         if(ext === '.sol') {
           const fileName = path.basename(file, '.sol');
-          const result = await collection.findOne({name: fileName});
+          const dbName = Number(fileName) + 10000
+          const result = await collection.findOne({_id: dbName});
 
           if(result) {
             console.log(count++);
             const fileContent = await readFile(file, 'utf8');
-            const res = await collection.updateOne({name: fileName}, {$set: {code: fileContent}});
+            const res = await collection.updateOne({_id: dbName}, {$set: {code: fileContent}});
           }
          
 
